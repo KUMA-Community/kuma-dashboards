@@ -1,0 +1,14 @@
+Распределение событий по категориям TI
+SELECT count(ID) AS `metric`, extract(TI, '.+category\"\:\"([^"]+).+') AS `value` FROM `events` WHERE TI !='' GROUP BY `value` ORDER BY `metric` DESC LIMIT 250
+
+Распределение разрешенных событий по категориям TI
+SELECT count(ID) AS `metric`, extract(TI, '.+category\"\:\"([^"]+).+') AS `value` FROM `events` WHERE TI !='' AND DeviceAction IN ('accept', 'allow') GROUP BY `value` ORDER BY `metric` DESC LIMIT 250
+
+Все события имеющие категорию TI по вендорам
+SELECT count(ID) as cnt, extract(TI, '.+category\"\:\"([^"]+).+') as category, DeviceVendor as vend FROM `events` WHERE TI !='' GROUP BY category, vend ORDER BY cnt DESC
+
+Все разрешенные события имеющие категорию TI по вендорам
+SELECT count(ID) as cnt, extract(TI, '.+category\"\:\"([^"]+).+') as category, DeviceVendor as vend FROM `events` WHERE TI !='' AND DeviceAction IN ('accept', 'allow') GROUP BY category, vend ORDER BY cnt DESC
+
+Разрешенные соединения с категорией TI с источником и назначением
+SELECT count(ID) as cnt, extract(TI, '.+category\"\:\"([^"]+).+') as category, DeviceVendor as vend, SourceAddress as srcIP, DestinationAddress as dstIP FROM `events` WHERE TI !='' AND DeviceAction IN ('accept', 'allow') GROUP BY category, vend, srcIP, dstIP ORDER BY cnt DESC
